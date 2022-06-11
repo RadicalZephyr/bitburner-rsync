@@ -2,10 +2,14 @@ use std::collections::HashMap;
 
 static VALID_EXTENSIONS: [&str; 3] = [".js", ".script", ".ns"];
 
+fn main() {
+    run();
+}
+
 // Connect to http://localhost:9990
 // postURI: '/'
 #[tokio::main()]
-async fn main() {
+async fn run() {
     let mut file_data: HashMap<&'static str, &'static str> = HashMap::new();
     file_data.insert("filename", "file.script");
     file_data.insert("code", "SGVsbG8=");
