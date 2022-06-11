@@ -17,13 +17,13 @@ fn main() {
 
 #[tokio::main()]
 async fn run() {
-    send_file("q.ns", "SGVsbG8=").await;
+    send_file("q.ns", "hello world").await;
 }
 
 async fn send_file(filename: impl Into<String>, body: impl Into<String>) {
     let mut file_data: HashMap<&'static str, String> = HashMap::new();
     file_data.insert("filename", filename.into());
-    file_data.insert("code", body.into());
+    file_data.insert("code", base64::encode(body.into()));
 
     let client = reqwest::Client::new();
     let res = client
