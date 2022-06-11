@@ -1,13 +1,19 @@
-use std::collections::HashMap;
+use std::{collections::HashMap, path::PathBuf};
+
+use clap::Parser;
 
 static VALID_EXTENSIONS: [&str; 3] = [".js", ".script", ".ns"];
 
+#[derive(Parser, Debug)]
+struct Args {
+    sync_dir: PathBuf,
+}
+
 fn main() {
+    let args = Args::parse();
     run();
 }
 
-// Connect to http://localhost:9990
-// postURI: '/'
 #[tokio::main()]
 async fn run() {
     let mut file_data: HashMap<&'static str, &'static str> = HashMap::new();
