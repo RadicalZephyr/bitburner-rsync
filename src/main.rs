@@ -2,6 +2,7 @@ use std::{collections::HashMap, path::PathBuf};
 
 use clap::Parser;
 
+#[allow(dead_code)]
 static VALID_EXTENSIONS: [&str; 3] = [".js", ".script", ".ns"];
 
 #[derive(Parser, Debug)]
@@ -10,15 +11,19 @@ struct Args {
 }
 
 fn main() {
-    let args = Args::parse();
+    let _args = Args::parse();
     run();
 }
 
 #[tokio::main()]
 async fn run() {
-    let mut file_data: HashMap<&'static str, &'static str> = HashMap::new();
-    file_data.insert("filename", "file.script");
-    file_data.insert("code", "SGVsbG8=");
+    send_file("q.ns", "SGVsbG8=").await;
+}
+
+async fn send_file(filename: impl Into<String>, body: impl Into<String>) {
+    let mut file_data: HashMap<&'static str, String> = HashMap::new();
+    file_data.insert("filename", filename.into());
+    file_data.insert("code", body.into());
 
     let client = reqwest::Client::new();
     let res = client
