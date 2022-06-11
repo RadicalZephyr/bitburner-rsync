@@ -4,6 +4,7 @@ use std::{
 };
 
 use clap::Parser;
+use tokio::{fs::File, io::AsyncReadExt};
 use walkdir::DirEntry;
 
 #[derive(Parser, Debug)]
@@ -61,7 +62,13 @@ async fn run(args: Args) {
         let entry = entry.expect("failed while walking directory");
         if entry.file_type().is_file() {
             println!("entry path {}", entry.path().display());
-            client.send_file(entry.path(), "hello world").await;
+            let path = entry.path();
+            let mut file = File::open(path).await.expect("failed to open file");
+            let mut contents = vec![];
+            file.read_to_end(&mut contents)
+                .await
+                .expect("failed to read file");
+            client.send_file(path, contents).await;
         }
     }
 }
@@ -83,10 +90,10 @@ impl Client {
         }
     }
 
-    async fn send_file(&self, filename: &Path, body: impl Into<String>) {
+    async fn send_file(&self, filename: &Path, body: impl AsRef<[u8]>) {
         let mut file_data: HashMap<&'static str, String> = HashMap::new();
         file_data.insert("filename", self.munge_filename(filename));
-        file_data.insert("code", base64::encode(body.into()));
+        file_data.insert("code", base64::encode(body.as_ref()));
 
         let res = self
             .client
