@@ -9,6 +9,8 @@ use walkdir::DirEntry;
 
 #[derive(Parser, Debug)]
 struct Args {
+    #[clap(long, env = "BITBURNER_API_TOKEN")]
+    api_token: String,
     sync_dir: PathBuf,
 }
 
@@ -50,7 +52,7 @@ fn is_valid(entry: &DirEntry) -> bool {
 
 #[tokio::main()]
 async fn run(args: Args) {
-    let client = Client::new("", args.sync_dir.clone());
+    let client = Client::new(&args.api_token, &args.sync_dir);
 
     let walker = walkdir::WalkDir::new(&args.sync_dir)
         .follow_links(false)
@@ -78,12 +80,12 @@ struct Client {
 }
 
 impl Client {
-    pub fn new(auth_token: impl Into<String>, base_directory: PathBuf) -> Self {
+    pub fn new(auth_token: impl Into<String>, base_directory: impl Into<PathBuf>) -> Self {
         let client = reqwest::Client::new();
         Self {
             client,
             auth_token: auth_token.into(),
-            base_directory,
+            base_directory: base_directory.into(),
         }
     }
 
