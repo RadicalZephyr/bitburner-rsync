@@ -38,10 +38,8 @@ fn is_valid(entry: &DirEntry) -> bool {
         .file_name()
         .to_str()
         .map(|s| {
-            dbg!(s);
             for ext in &VALID_EXTENSIONS {
                 if s.ends_with(ext) {
-                    dbg!(ext);
                     return true;
                 }
             }
@@ -61,7 +59,6 @@ async fn run(args: Args) {
     for entry in walker {
         let entry = entry.expect("failed while walking directory");
         if entry.file_type().is_file() {
-            println!("entry path {}", entry.path().display());
             let path = entry.path();
             let mut file = File::open(path).await.expect("failed to open file");
             let mut contents = vec![];
@@ -103,14 +100,11 @@ impl Client {
             .send()
             .await
             .expect("failed to send file");
-        println!("response: {:#?}", res);
-        let body_json: serde_json::Value =
+        let _body_json: serde_json::Value =
             res.json().await.expect("failed to receive response body");
-        println!("body: {:#?}", body_json);
     }
 
     fn munge_filename(&self, path: &Path) -> String {
-        dbg!(&self.base_directory, path);
         let relative_path = path
             .strip_prefix(&self.base_directory)
             .expect("failed to strip prefix");
