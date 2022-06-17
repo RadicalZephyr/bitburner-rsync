@@ -55,7 +55,7 @@ jobs:
 
 
   build-release:
-    name: "Build release for ${{ matrix.platform }}"
+    name: "Build release for ${{ matrix.build }}"
     runs-on: ${{ matrix.os }}-latest
     needs: create-release
 
