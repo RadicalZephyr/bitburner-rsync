@@ -40,6 +40,8 @@ jobs:
         if: github.ref_type == 'tag' && env.BBR_VERSION == ''
         run: |
           echo "BBR_VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_ENV
+      - shell: bash
+        run: |
           echo "version is: ${{ env.BBR_VERSION }}"
 
       - name: Create GitHub release
