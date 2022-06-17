@@ -48,7 +48,7 @@ jobs:
         shell: bash
         if: github.ref_type == 'branch' && github.ref_name == 'main'
         run: |
-          echo "BBR_VERSION=latest >> $GITHUB_ENV"
+          echo "BBR_VERSION=latest" >> $GITHUB_ENV
           echo "version is: ${{ env.BBR_VERSION }}"
 
       - name: Create GitHub release
