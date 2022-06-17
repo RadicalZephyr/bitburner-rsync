@@ -41,7 +41,7 @@ jobs:
         shell: bash
         if: env.BBR_VERSION == ''
         run: |
-          echo "BBR_VERSION=${GITHUB_REFNAME#v}" >> $GITHUB_ENV
+          echo "BBR_VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_ENV
           echo "version is: ${{ env.BBR_VERSION }}"
 
       - name: Create GitHub release
